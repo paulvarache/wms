@@ -1,4 +1,4 @@
-import api from '../proto/api_grpc_web_pb';
+import api from '../proto/inventory_grpc_web_pb';
 import { ResourcesManager } from './resources-manager';
 
 export class LocationsManager extends ResourcesManager<number, api.Location> {

@@ -2,7 +2,7 @@ import { WMSApp } from "../ui/app";
 import { Router } from "./router";
 import { RouteResolver } from "./route-resolver";
 import { Page } from "./page";
-import api from "../proto/api_grpc_web_pb";
+import api from "../proto/inventory_grpc_web_pb";
 
 export type PageLoader = (args : any[]) => Promise<Page>;
 

@@ -1,7 +1,9 @@
 const { copyFileSync, readFileSync, writeFileSync } = require('fs');
 
-copyFileSync('proto/api_pb.d.ts', 'src/proto/api_pb.d.ts');
+const [dir] = process.argv.slice(2);
 
-const contents = readFileSync('proto/api_grpc_web_pb.d.ts', 'utf-8');
+copyFileSync(`proto/${dir}_pb.d.ts`, `src/proto/${dir}_pb.d.ts`);
 
-writeFileSync('src/proto/api_grpc_web_pb.d.ts', `export * from './api_pb'\n${contents}`);
+const contents = readFileSync(`proto/${dir}_grpc_web_pb.d.ts`, 'utf-8');
+
+writeFileSync(`src/proto/${dir}_grpc_web_pb.d.ts`, `export * from './${dir}_pb'\n${contents}`);

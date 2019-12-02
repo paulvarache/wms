@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net"
-
+	"wms/accounts/api"
 	"wms/database"
-	"wms/inventory/api"
 	"wms/util"
 
 	"google.golang.org/grpc"
@@ -15,9 +14,9 @@ import (
 func main() {
 	database.InitDB(database.GetDataSourceNameFromEnv())
 
-	port, err := util.GetenvInt("INVENTORY_PORT")
+	port, err := util.GetenvInt("ACCOUNTS_PORT")
 	if err != nil {
-		log.Fatalf("Missing INVENTORY_PORT env")
+		log.Fatalf("Missing env var ACCOUNTS_PORT: %s", err)
 	}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
@@ -29,7 +28,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	api.RegisterInventoryServer(grpcServer, &s)
+	api.RegisterAccountsServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to start server: %s", err)

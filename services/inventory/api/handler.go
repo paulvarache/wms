@@ -6,16 +6,16 @@ import (
 	"log"
 	"os"
 
-	"../models"
+	"wms/inventory/models"
 )
 
 var dataSourceName string = fmt.Sprintf(
 	"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
-	os.Getenv("DB_USER"),
-	os.Getenv("DB_PWD"),
-	os.Getenv("DB_HOST"),
-	os.Getenv("DB_PORT"),
-	os.Getenv("DB_NAME"),
+	os.Getenv("POSTGRES_USER"),
+	os.Getenv("POSTGRES_PASSWORD"),
+	os.Getenv("POSTGRES_HOST"),
+	os.Getenv("POSTGRES_PORT"),
+	os.Getenv("POSTGRES_DB"),
 )
 
 // Server is a an empty representation of the server
@@ -30,7 +30,6 @@ func SingleSkuFromSkuObject(in *models.SKU) *SingleSku {
 
 // CreateAccount creates an account
 func (s *Server) CreateAccount(ctx context.Context, in *CreateAccountMessage) (*SingleAccount, error) {
-	models.InitDB(dataSourceName)
 	account, err := models.CreateAccount(in.Name)
 	log.Println("Created Account")
 	if err != nil {
@@ -42,7 +41,6 @@ func (s *Server) CreateAccount(ctx context.Context, in *CreateAccountMessage) (*
 
 // CreateWarehouse creates a warehouse
 func (s *Server) CreateWarehouse(ctx context.Context, in *CreateWarehouseMessage) (*SingleWarehouse, error) {
-	models.InitDB(dataSourceName)
 	warehouse, err := models.CreateWarehouse(in.Name, in.AccountID)
 	log.Println("Created Warehouse")
 	if err != nil {
@@ -54,7 +52,6 @@ func (s *Server) CreateWarehouse(ctx context.Context, in *CreateWarehouseMessage
 
 // FindSku will find a sku
 func (s *Server) FindSku(ctx context.Context, in *FindSkuMessage) (*SingleSku, error) {
-	models.InitDB(dataSourceName)
 	item, err := models.FindSku(in.Sku)
 	if err != nil {
 		return nil, err
@@ -67,7 +64,6 @@ func (s *Server) FindSku(ctx context.Context, in *FindSkuMessage) (*SingleSku, e
 
 // CreateSku will create a new SKU
 func (s *Server) CreateSku(ctx context.Context, in *CreateSkuMessage) (*SingleSku, error) {
-	models.InitDB(dataSourceName)
 	newSku, err := models.CreateSku(in.AccountID, in.Sku, in.Name, in.Description, in.Barcode)
 	log.Println("Created SKU")
 	if err != nil {
@@ -78,7 +74,6 @@ func (s *Server) CreateSku(ctx context.Context, in *CreateSkuMessage) (*SingleSk
 
 // ListWarehouses lists warehouses
 func (s *Server) ListWarehouses(ctx context.Context, in *ListWarehousesMessage) (*WarehouseList, error) {
-	models.InitDB(dataSourceName)
 	items, err := models.ListWarehouses(in.AccountID)
 	if err != nil {
 		return nil, err
@@ -94,7 +89,6 @@ func (s *Server) ListWarehouses(ctx context.Context, in *ListWarehousesMessage) 
 
 // ListLocations lists locations
 func (s *Server) ListLocations(ctx context.Context, in *ListLocationsMessage) (*LocationList, error) {
-	models.InitDB(dataSourceName)
 	items, err := models.ListLocations(in.WarehouseId)
 	if err != nil {
 		return nil, err
@@ -110,7 +104,6 @@ func (s *Server) ListLocations(ctx context.Context, in *ListLocationsMessage) (*
 
 // CreateLocation creates a location
 func (s *Server) CreateLocation(ctx context.Context, in *CreateLocationMessage) (*SingleLocation, error) {
-	models.InitDB(dataSourceName)
 	location, err := models.CreateLocation(in.WarehouseId, in.Name)
 	log.Println("Created Location")
 	if err != nil {

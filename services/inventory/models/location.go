@@ -1,5 +1,7 @@
 package models
 
+import "wms/database"
+
 // Location represents a location
 type Location struct {
 	ID          int64
@@ -9,7 +11,7 @@ type Location struct {
 
 // CreateLocation will create a location for a given warehouse
 func CreateLocation(warehouseID int64, name string) (*Location, error) {
-	row := db.QueryRow("INSERT INTO wms.locations (warehouse_id, name) VALUES($1, $2) RETURNING location_id, warehouse_id, name", warehouseID, name)
+	row := database.GetDB().QueryRow("INSERT INTO wms.locations (warehouse_id, name) VALUES($1, $2) RETURNING location_id, warehouse_id, name", warehouseID, name)
 	var location Location
 	err := row.Scan(&location.ID, &location.WarehouseID, &location.Name)
 	if err != nil {
@@ -20,7 +22,7 @@ func CreateLocation(warehouseID int64, name string) (*Location, error) {
 
 // ListLocations lists locations in a warehouse
 func ListLocations(warehouseID int64) ([]*Location, error) {
-	rows, err := db.Query("SELECT location_id, warehouse_id, name FROM wms.locations WHERE warehouse_id=$1", warehouseID)
+	rows, err := database.GetDB().Query("SELECT location_id, warehouse_id, name FROM wms.locations WHERE warehouse_id=$1", warehouseID)
 	if err != nil {
 		return nil, err
 	}

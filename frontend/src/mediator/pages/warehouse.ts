@@ -2,7 +2,7 @@ import { Page } from "../page";
 import { WMSWarehouse } from "../../ui/pages/warehouse";
 import { WarehouseManager } from "../../model/warehouse";
 import { Mediator } from "../mediator";
-import api from '../../proto/api_grpc_web_pb';
+import api from '../../proto/inventory_grpc_web_pb';
 import { TableProvider } from "../table/table-provider";
 import { html } from "lit-html";
 import { LocationsManager } from "../../model/locations";

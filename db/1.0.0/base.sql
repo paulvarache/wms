@@ -6,14 +6,22 @@ BEGIN
 END
 $$;
 
-DROP SCHEMA wms CASCADE;
+DROP SCHEMA IF EXISTS wms CASCADE;
 
 CREATE SCHEMA IF NOT EXISTS wms;
 GRANT USAGE ON SCHEMA wms to users;
 
+
 CREATE TABLE IF NOT EXISTS wms.accounts (
     account_id SERIAL UNIQUE PRIMARY KEY,
     name text
+);
+
+CREATE TABLE IF NOT EXISTS wms.users (
+    account_id INTEGER REFERENCES wms.accounts(account_id),
+    user_id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE,
+    password TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS wms.skus (

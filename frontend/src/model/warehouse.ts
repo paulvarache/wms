@@ -1,5 +1,7 @@
-import api from '../proto/api_grpc_web_pb';
+import api from '../proto/inventory_grpc_web_pb';
 import { ResourcesManager } from './resources-manager';
+
+import './accounts'
 
 export class WarehouseManager extends ResourcesManager<number, api.Warehouse> {
     client : api.InventoryClient;

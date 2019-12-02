@@ -1,8 +1,11 @@
-package models
+package database
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 	"log"
+	"os"
 
 	// Imported as a side effect of openning the SQL connection
 	_ "github.com/lib/pq"
@@ -27,4 +30,24 @@ func InitDB(dataSourceName string) {
 	if err = db.Ping(); err != nil {
 		log.Panic(err)
 	}
+}
+
+// GetDataSourceNameFromEnv will build the connection string for the PG db based on the env variables provided
+func GetDataSourceNameFromEnv() string {
+	return fmt.Sprintf(
+		"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_PASSWORD"),
+		os.Getenv("POSTGRES_HOST"),
+		os.Getenv("POSTGRES_PORT"),
+		os.Getenv("POSTGRES_DB"),
+	)
+}
+
+// GetDB returns the db
+func GetDB() *sql.DB {
+	if db == nil {
+		log.Panic(errors.New("InitDB was not called"))
+	}
+	return db
 }

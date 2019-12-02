@@ -1,7 +1,7 @@
 import { LitElement, html, property, css } from "lit-element";
 import '../table';
 import { TableProvider } from "../../mediator/table/table-provider";
-import { Warehouse } from "../../proto/api_pb";
+import { Warehouse } from "../../proto/inventory_grpc_web_pb";
 
 export class WMSWarehouses extends LitElement {
 

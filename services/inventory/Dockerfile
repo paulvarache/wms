@@ -1,22 +1,19 @@
-FROM node:12-alpine AS builder
+FROM golang:alpine AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /tmp/build
 
-COPY package.json ./
-COPY yarn.lock ./
-COPY tsconfig.json ./
-RUN yarn
+COPY inventory inventory
+COPY database database
 
-COPY src ./src
-RUN yarn build
+WORKDIR /tmp/build/inventory
 
-FROM node:12-alpine  AS service
-COPY --from=builder --chown=node:node /usr/src/app/lib /usr/src/app
-COPY --from=builder --chown=node:node /usr/src/app/package.json /usr/src/app/package.json
-COPY --from=builder --chown=node:node /usr/src/app/node_modules /usr/src/app/node_modules
-USER node
-WORKDIR /usr/src/app
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o inventory
 
-EXPOSE 3000
+FROM scratch AS service
+COPY --from=builder /tmp/build/inventory/inventory /inventory
+WORKDIR /
 
-CMD ["node", "."]
+EXPOSE 7777
+
+ENTRYPOINT ["/inventory"]

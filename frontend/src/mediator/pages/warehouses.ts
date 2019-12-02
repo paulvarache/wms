@@ -1,7 +1,7 @@
 import { Page } from "../page";
 import { WMSWarehouses } from "../../ui/pages/warehouses";
 import { TableProvider } from "../table/table-provider";
-import api from '../../proto/api_grpc_web_pb';
+import api from '../../proto/inventory_grpc_web_pb';
 import { WarehouseManager } from "../../model/warehouse";
 import { Mediator } from "../mediator";
 import { LinkTitleAction, TitleAction } from "../title-action";

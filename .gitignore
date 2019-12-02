@@ -1,7 +1,7 @@
 .terraform
 node_modules
 data.csv
-api.pb.go
+*.pb.go
 dist
 *.log
 frontend/proto

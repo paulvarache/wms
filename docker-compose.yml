@@ -1,0 +1,59 @@
+version: "3"
+services:
+  db:
+    image: "postgres:9.6-alpine"
+    env_file:
+      - .env
+  psql:
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+    image: "jbergknoff/postgresql-client"
+    entrypoint:
+      - psql
+      - "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
+    volumes:
+      - ./db:/db
+    working_dir: /db
+  # Envoy proxy will handle requests from the web to the different services
+  proxy:
+    depends_on:
+      - inventory
+      - accounts
+    image: "envoyproxy/envoy:latest"
+    volumes:
+      - ./services/proxy/envoy.yml:/etc/envoy/envoy.yaml
+    command: /usr/local/bin/envoy -c /etc/envoy/envoy.yaml -l trace --log-path /tmp/envoy_info.log
+    ports:
+      - 8080:8080
+      - 8081:8081
+      - 9901:9901
+  # Inventory service
+  inventory:
+    depends_on:
+      - db
+    image: golang:alpine
+    working_dir: /app/inventory
+    volumes:
+      - ./services:/app
+      - ~/go:/go
+    command: go run main.go
+    ports:
+      - "${INVENTORY_PORT}:${INVENTORY_PORT}"
+    env_file:
+      - .env
+  # Accounts service
+  accounts:
+    depends_on:
+      - db
+    image: golang:alpine
+    working_dir: /app/accounts
+    volumes:
+      - ./services:/app
+      - ~/go:/go
+    command: go run main.go
+    ports:
+      - "${ACCOUNTS_PORT}:${ACCOUNTS_PORT}"
+    env_file:
+      - .env
