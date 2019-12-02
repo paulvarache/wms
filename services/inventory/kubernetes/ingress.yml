@@ -1,0 +1,9 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: inventory-ingress
+  namespace: prod
+spec:
+  backend:
+    serviceName: inventory
+    servicePort: 8080

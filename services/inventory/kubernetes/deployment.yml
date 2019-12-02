@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory
+  namespace: prod
+  labels:
+    app: inventory
+    version: v0
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: inventory
+      version: v0
+  template:
+    metadata:
+      labels:
+        app: inventory
+        version: v0
+    spec:
+      containers:
+      - name: inventory
+        image: gcr.io/paulvarache/wms-inventory
+        ports:
+        - containerPort: 8080
+          # This name will be used in the Service.
+          name: backend-http
+        imagePullPolicy: Always
+        envFrom:
+          - configMapRef:
+              name: inventory-env
+      restartPolicy: Always

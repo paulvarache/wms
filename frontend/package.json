@@ -1,0 +1,29 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "tsc": "tsc",
+    "serve": "es-dev-server --node-resolve --watch --app-index index.html",
+    "proto:gen": "protoc -I ../services/inventory/api ../services/inventory/api/api.proto --js_out=import_style=commonjs,binary:./proto --grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:./proto",
+    "proto:bundle": "rollup -c",
+    "proto:copy-def": "node ./tasks/copy-def.js",
+    "proto": "yarn proto:gen && yarn proto:bundle && yarn proto:copy-def"
+  },
+  "devDependencies": {
+    "es-dev-server": "^1.27.0",
+    "rollup": "^1.27.5",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "@improbable-eng/grpc-web": "^0.11.0",
+    "@kano/common": "^1.0.4",
+    "google-protobuf": "^3.11.0",
+    "grpc-web": "^1.0.7",
+    "lit-element": "^2.2.1",
+    "pwa-helpers": "^0.9.1"
+  }
+}
