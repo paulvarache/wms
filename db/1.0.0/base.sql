@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS wms.users (
     password TEXT NOT NULL
 );
 
+CREATE INDEX users_email_index ON wms.users(email);
+
 CREATE TABLE IF NOT EXISTS wms.skus (
     account_id INTEGER REFERENCES wms.accounts(account_id),
     sku_id SERIAL UNIQUE,

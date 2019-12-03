@@ -106,5 +106,23 @@ service Inventory {
 
     rpc CreateLocation(CreateLocationMessage) returns (SingleLocation) {}
     rpc ListLocations(ListLocationsMessage) returns (LocationList) {}
+
+    rpc SearchInventory(SearchMessage) returns (SearchResult) {}
 }
 
+message SearchMessage {
+    int64 accountId = 1;
+    string sku = 2;
+}
+
+message InventoryItem {
+    int64 ID = 1;
+    Sku sku = 2;
+    Location location = 3;
+    Warehouse warehouse = 4;
+    int64 quantity = 5;
+}
+
+message SearchResult {
+    repeated InventoryItem items = 1;
+}

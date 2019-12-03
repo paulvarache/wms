@@ -41,6 +41,10 @@ export class WMSTable<T> extends LitElement {
             tbody tr:hover {
                 background-color: rgba(0,0,0,.04);
             }
+            th:not(:first-child) {
+                padding-left: 24px;
+                white-space: nowrap;
+            }
             th {
                 font-weight: 500;
                 font-size: 11px;
@@ -60,7 +64,7 @@ export class WMSTable<T> extends LitElement {
                 padding: 7px 0 8px 0;
                 border-bottom: 1px solid rgba(0,0,0,.08);
             }
-            tr .checkbox+td {
+            tr .checkbox+td, tr .checkbox+th {
                 padding-left: 4px;
                 color: black;
             }

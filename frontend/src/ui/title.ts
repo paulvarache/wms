@@ -18,6 +18,28 @@ export class WMSTitle extends LitElement {
             }
             ::slotted(*) {
                 margin-left: 16px;
+                color: #3367d6;
+                display: inline-block;
+                height: 36px;
+                line-height: 36px;
+                text-transform: uppercase;
+                vertical-align: middle;
+                font-weight: bold;
+                text-decoration: none;
+                background: none;
+                user-select: none;
+                cursor: pointer;
+                outline: none;
+                border: none;
+                font-size: 13px;
+                border-radius: 5px;
+                padding: 0 12px;
+            }
+            ::slotted(*:hover:not([disabled])) {
+                background-color: rgba(0,0,0,0.08);
+            }
+            ::slotted(*[disabled]) {
+                color: rgba(0,0,0,.54);
             }
         `]
     }

@@ -14,7 +14,27 @@ export class WMSNav extends LitElement {
             }
             nav {
                 flex: 1;
+                display: flex;
+                flex-direction: column;
                 border-top: 1px solid var(--border-color);
+                padding-top: 8px;
+            }
+            nav>* {
+                font-family: Arial, Helvetica, sans-serif;
+                text-decoration: none;
+                color: black;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                height: 40px;
+                padding-left: 16px;
+            }
+            nav>*:hover {
+                background-color: rgba(0, 0, 0, 0.04);
+            }
+            nav>*.selected {
+                background-color: rgba(161,194,250,.16);
+                color: #3367d6;
             }
         `];
     }
@@ -22,7 +42,8 @@ export class WMSNav extends LitElement {
         return html`
             <div class="title"></div>
             <nav>
-                <slot></slot>
+                <a href="/">Inventory</a>
+                <a href="/warehouses">Warehouses</a>
             </nav>
         `;
     }

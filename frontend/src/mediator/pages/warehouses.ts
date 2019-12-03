@@ -1,11 +1,11 @@
-import { Page } from "../page";
-import { WMSWarehouses } from "../../ui/pages/warehouses";
-import { TableProvider } from "../table/table-provider";
+import { Page } from '../page';
+import { WMSWarehouses } from '../../ui/pages/warehouses';
+import { TableProvider } from '../table/table-provider';
 import api from '../../proto/inventory_grpc_web_pb';
-import { WarehouseManager } from "../../model/warehouse";
-import { Mediator } from "../mediator";
-import { LinkTitleAction, TitleAction } from "../title-action";
-import { html } from "lit-html";
+import { WarehouseManager } from '../../model/warehouse';
+import { Mediator } from '../mediator';
+import { LinkTitleAction, RefreshAction } from '../title-action';
+import { html } from 'lit-html';
 
 class WarehouseTableProvider extends TableProvider<api.Warehouse> {
     warehouses : api.Warehouse[] = [];
@@ -35,12 +35,6 @@ class CreateWarehouseAction extends LinkTitleAction {
     }
     getHref() {
         return '/create-warehouse';
-    }
-}
-
-class RefreshAction extends TitleAction {
-    getName() {
-        return 'Refresh';
     }
 }
 

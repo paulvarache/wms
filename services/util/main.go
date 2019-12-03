@@ -2,6 +2,7 @@ package util
 
 import (
 	"errors"
+	"log"
 	"os"
 	"strconv"
 )
@@ -27,4 +28,18 @@ func GetenvInt(key string) (int, error) {
 		return 0, err
 	}
 	return v, nil
+}
+
+var jwtKey []byte = nil
+
+// GetJWTKey reads the JWT_KEY env var and caches the value
+func GetJWTKey() []byte {
+	if jwtKey == nil {
+		keyString, err := GetenvStr("JWT_KEY")
+		if err != nil {
+			log.Panic(err)
+		}
+		jwtKey = []byte(keyString)
+	}
+	return jwtKey
 }

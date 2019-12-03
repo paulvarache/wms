@@ -43,3 +43,9 @@ export class LinkTitleAction extends TitleAction<HTMLLinkElement> {
         return '';
     }
 }
+
+export class RefreshAction extends TitleAction {
+    getName() {
+        return 'Refresh';
+    }
+}

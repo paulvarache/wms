@@ -2,6 +2,11 @@ syntax = "proto3";
 
 package api;
 
+service Accounts {
+    rpc CreateUser(CreateUserMessage) returns (UserCreatedMessage) {}
+    rpc Authenticate(AuthMessage) returns (AuthResponse) {}
+}
+
 message CreateUserMessage {
     int64 accountId = 1;
     string email = 2;
@@ -18,8 +23,20 @@ message UserCreatedMessage {
     User user = 1;
 }
 
-service Accounts {
-    rpc CreateUser(CreateUserMessage) returns (UserCreatedMessage) {}
+message AuthMessage {
+    int64 accountId = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message Session {
+    string token = 1;
+    int64 expires = 2;
+}
+
+message AuthResponse {
+    User user = 1;
+    Session session = 2;
 }
 
 // protoc -I proto --go_out=plugins=grpc:api proto\accounts.proto
