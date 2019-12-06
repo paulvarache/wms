@@ -4,6 +4,7 @@ import { RouteResolver } from "./route-resolver";
 import { Page } from "./page";
 import api from "../proto/inventory_grpc_web_pb";
 import accounts from "../proto/accounts_grpc_web_pb";
+import importApi from "../proto/import_grpc_web_pb";
 import { AuthModel } from "../model/auth";
 
 export type PageLoader = (args : any[]) => Promise<Page>;
@@ -14,6 +15,7 @@ export class Mediator {
     routeResolver = new RouteResolver<PageLoader>();
     client = new api.InventoryPromiseClient('http://localhost:8080', null, null);
     accountsClient = new accounts.AccountsPromiseClient('http://localhost:8081', null, null);
+    importClient = new importApi.ImportPromiseClient('http://localhost:8082', null, null);
     auth: AuthModel;
     constructor(ui : WMSApp) {
         this.ui = ui;
@@ -51,6 +53,7 @@ export class Mediator {
         });
 
         this.routeResolver.addRoute(/^\/auth$/, () => import('./pages/auth').then(m => new m.AuthPage(this)));
+        this.routeResolver.addRoute(/^\/import$/, () => import('./pages/import').then(m => new m.ImportPage(this)));
         this.routeResolver.addRoute(/^\/warehouses$/, () => import('./pages/warehouses').then(m => new m.WarehousePages(this)));
         this.routeResolver.addRoute(/^\/create-warehouse$/, () => import('./pages/create-warehouse').then(m => new m.CreateWarehousePage(this)));
         this.routeResolver.addRoute(/^\/warehouse\/(\d+)$/, (args) => import('./pages/warehouse').then(m => new m.WarehousePage(this, parseInt(args[0], 10))));

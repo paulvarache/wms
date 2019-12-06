@@ -1,51 +1,68 @@
-resource "google_container_cluster" "primary" {
-  name     = "wms-gke-cluster"
-  location = "us-central1"
+# resource "azurerm_resource_group" "k8s" {
+#     name     = var.resource_group_name
+#     location = var.location
+# }
 
-  # We can't create a cluster with no node pool defined, but we want to only use
-  # separately managed node pools. So we create the smallest possible default
-  # node pool and immediately delete it.
-  remove_default_node_pool = true
-  initial_node_count       = 1
+# resource "random_id" "log_analytics_workspace_name_suffix" {
+#     byte_length = 8
+# }
 
-  master_auth {
-    username = ""
-    password = ""
+# resource "azurerm_log_analytics_workspace" "test" {
+#     # The WorkSpace name has to be unique across the whole of azure, not just the current subscription/tenant.
+#     name                = "${var.log_analytics_workspace_name}-${random_id.log_analytics_workspace_name_suffix.dec}"
+#     location            = var.log_analytics_workspace_location
+#     resource_group_name = azurerm_resource_group.k8s.name
+#     sku                 = var.log_analytics_workspace_sku
+# }
 
-    client_certificate_config {
-      issue_client_certificate = false
-    }
-  }
-}
+# resource "azurerm_log_analytics_solution" "test" {
+#     solution_name         = "ContainerInsights"
+#     location              = azurerm_log_analytics_workspace.test.location
+#     resource_group_name   = azurerm_resource_group.k8s.name
+#     workspace_resource_id = azurerm_log_analytics_workspace.test.id
+#     workspace_name        = azurerm_log_analytics_workspace.test.name
 
-resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name       = "wms-node-pool"
-  location   = "us-central1"
-  cluster    = google_container_cluster.primary.name
-  node_count = 1
+#     plan {
+#         publisher = "Microsoft"
+#         product   = "OMSGallery/ContainerInsights"
+#     }
+# }
 
-  node_config {
-    preemptible  = true
-    machine_type = "n1-standard-1"
+# resource "azurerm_kubernetes_cluster" "k8s" {
+#     name                = var.cluster_name
+#     location            = azurerm_resource_group.k8s.location
+#     resource_group_name = azurerm_resource_group.k8s.name
+#     dns_prefix          = var.dns_prefix
 
-    metadata = {
-      disable-legacy-endpoints = "true"
-    }
-    service_account = google_service_account.service_account.email
+#     linux_profile {
+#         admin_username = "ubuntu"
 
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform",
-      "https://www.googleapis.com/auth/devstorage.read_only",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring"
-    ]
-  }
-}
+#         ssh_key {
+#             key_data = file(var.ssh_public_key)
+#         }
+#     }
 
-resource "null_resource" "configure_kubectl" {
-  provisioner "local-exec" {
-    command = "gcloud container clusters get-credentials ${google_container_cluster.primary.name} --region us-central1 --project ${var.project}"
-  }
+#     agent_pool_profile {
+#         name            = "agentpool"
+#         count           = var.agent_count
+#         vm_size         = "Standard_DS1_v2"
+#         os_type         = "Linux"
+#         os_disk_size_gb = 30
+#     }
 
-  depends_on = [google_container_node_pool.primary_preemptible_nodes]
-}
+#     service_principal {
+#         client_id     = var.client_id
+#         client_secret = var.client_secret
+#     }
+
+#     addon_profile {
+#         oms_agent {
+#         enabled                    = true
+#         log_analytics_workspace_id = azurerm_log_analytics_workspace.test.id
+#         }
+#     }
+
+#     tags = {
+#         Environment = "Development"
+#     }
+# }

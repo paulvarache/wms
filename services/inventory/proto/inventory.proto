@@ -22,7 +22,6 @@ message SingleAccount {
 // SKUs
 
 message Sku {
-    int64 id = 1;
     int64 accountID = 2;
     string sku = 3;
     string name = 4;
@@ -74,9 +73,8 @@ message ListWarehousesMessage {
 // Location
 
 message Location {
-    int64 id = 1;
+    string id = 1;
     int64 warehouse_id = 2;
-    string name = 3;
 }
 
 message CreateLocationMessage {
@@ -99,6 +97,7 @@ message ListLocationsMessage {
 service Inventory {
     rpc CreateAccount(CreateAccountMessage) returns (SingleAccount) {}
     rpc CreateSku(CreateSkuMessage) returns (SingleSku) {}
+    rpc UpdateSku(CreateSkuMessage) returns (SingleSku) {}
     rpc FindSku(FindSkuMessage) returns (SingleSku) {}
     
     rpc CreateWarehouse(CreateWarehouseMessage) returns (SingleWarehouse) {}
@@ -116,7 +115,6 @@ message SearchMessage {
 }
 
 message InventoryItem {
-    int64 ID = 1;
     Sku sku = 2;
     Location location = 3;
     Warehouse warehouse = 4;

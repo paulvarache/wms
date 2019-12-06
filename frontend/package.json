@@ -8,6 +8,7 @@
     "serve": "es-dev-server --node-resolve --watch --app-index index.html",
     "proto:gen": "protoc -I ../services/inventory/proto ../services/inventory/proto/inventory.proto --js_out=import_style=commonjs,binary:./proto --grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:./proto",
     "proto:gen:accounts": "protoc -I ../services/accounts/proto ../services/accounts/proto/accounts.proto --js_out=import_style=commonjs,binary:./proto --grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:./proto",
+    "proto:gen:import": "protoc -I ../services/import/proto ../services/import/proto/import.proto --js_out=import_style=commonjs,binary:./proto --grpc-web_out=import_style=commonjs+dts,mode=grpcwebtext:./proto",
     "proto:bundle": "rollup -c",
     "proto:copy-def": "node ./tasks/copy-def.js",
     "proto": "yarn proto:gen && yarn proto:bundle && yarn proto:copy-def"

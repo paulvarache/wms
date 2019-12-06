@@ -28,9 +28,8 @@ CREATE INDEX users_email_index ON wms.users(email);
 
 CREATE TABLE IF NOT EXISTS wms.skus (
     account_id INTEGER REFERENCES wms.accounts(account_id),
-    sku_id SERIAL UNIQUE,
     sku text UNIQUE,
-    name text NOT NULL,
+    name text,
     description text,
     barcode text,
     PRIMARY KEY (account_id, sku)
@@ -44,15 +43,36 @@ CREATE TABLE IF NOT EXISTS wms.warehouses (
 
 CREATE TABLE IF NOT EXISTS wms.locations (
     warehouse_id INTEGER REFERENCES wms.warehouses(warehouse_id),
-    location_id SERIAL PRIMARY KEY,
-    name text UNIQUE
+    location text PRIMARY KEY
 );
-
-CREATE INDEX location_name_idx ON wms.locations(name);
 
 CREATE TABLE IF NOT EXISTS wms.inventory (
-    inventory_id SERIAL PRIMARY KEY,
-    sku_id INTEGER REFERENCES wms.skus(sku_id),
-    location_id INTEGER REFERENCES wms.locations(location_id),
-    quantity INTEGER
+    sku TEXT REFERENCES wms.skus(sku),
+    location TEXT REFERENCES wms.locations(location),
+    quantity INTEGER,
+    PRIMARY KEY(sku, location)
 );
+
+-- Reads an external inventory record and add/update the matching sku/location/quantity
+-- If the sku already exists, the name will be updated
+-- If the sku and location pair already exists, the quantity will be updated
+CREATE OR REPLACE FUNCTION wms.load(Paccount_id integer, Pwarehouse_id integer, Psku text, Pname text, Pdescription text, Pbarcode text, Plocation text, Pquantity integer) RETURNS VOID AS $$
+BEGIN
+    PERFORM wms.load_sku(Paccount_id, Psku, Pname, Pdescription, Pbarcode);
+    -- Insert locations if not exists
+    INSERT INTO wms.locations(warehouse_id, location) VALUES(Pwarehouse_id, Plocation) ON CONFLICT (location) DO NOTHING;
+    -- Insert inventory
+    INSERT INTO wms.inventory(sku, location, quantity) VALUES(Psku, Plocation, Pquantity) ON CONFLICT (sku, location) DO UPDATE
+        SET quantity=Pquantity;
+END; $$
+LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION wms.load_sku(INOUT Paccount_id integer, INOUT Psku text, INOUT Pname text, INOUT Pdescription text, INOUT Pbarcode text) AS $$
+DECLARE
+    ret RECORD;
+BEGIN
+    INSERT INTO wms.skus(account_id, sku, name, description, barcode) VALUES(Paccount_id, Psku, Pname, Pdescription, Pbarcode)
+    ON CONFLICT (account_id, sku) DO UPDATE SET name=Pname, description=Pdescription, barcode=Pbarcode
+    RETURNING account_id, sku, name, description, barcode INTO Paccount_id, Psku, Pname, Pdescription, Pbarcode;
+END; $$
+LANGUAGE PLPGSQL;

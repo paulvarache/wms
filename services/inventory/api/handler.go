@@ -2,20 +2,9 @@ package api
 
 import (
 	"context"
-	fmt "fmt"
 	"log"
-	"os"
 
 	"wms/inventory/models"
-)
-
-var dataSourceName string = fmt.Sprintf(
-	"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
-	os.Getenv("POSTGRES_USER"),
-	os.Getenv("POSTGRES_PASSWORD"),
-	os.Getenv("POSTGRES_HOST"),
-	os.Getenv("POSTGRES_PORT"),
-	os.Getenv("POSTGRES_DB"),
 )
 
 // Server is a an empty representation of the server
@@ -24,7 +13,7 @@ type Server struct {
 
 // SingleSkuFromSkuObject prepares a SKU to be sent
 func SingleSkuFromSkuObject(in *models.SKU) *SingleSku {
-	var sku = &Sku{Id: in.ID, Sku: in.Sku, Name: in.Name, Description: in.Description, Barcode: in.Barcode}
+	var sku = &Sku{Sku: in.Sku, Name: in.Name, Description: in.Description, Barcode: in.Barcode}
 	return &SingleSku{Item: sku}
 }
 
@@ -96,7 +85,7 @@ func (s *Server) ListLocations(ctx context.Context, in *ListLocationsMessage) (*
 	locations := make([]*Location, 0)
 	for i := 0; i < len(items); i++ {
 		item := items[i]
-		locations = append(locations, &Location{WarehouseId: item.WarehouseID, Id: item.ID, Name: item.Name})
+		locations = append(locations, &Location{WarehouseId: item.WarehouseID, Id: item.ID})
 	}
 
 	return &LocationList{Items: locations}, nil
@@ -109,6 +98,6 @@ func (s *Server) CreateLocation(ctx context.Context, in *CreateLocationMessage) 
 	if err != nil {
 		return nil, err
 	}
-	var locations = &Location{Id: location.ID, WarehouseId: location.WarehouseID, Name: location.Name}
+	var locations = &Location{Id: location.ID, WarehouseId: location.WarehouseID}
 	return &SingleLocation{Item: locations}, nil
 }

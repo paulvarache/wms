@@ -47,7 +47,7 @@ class InventoryTableProvider extends TableProvider<InventoryItem> {
                 if (!location) {
                     return html``;
                 }
-                return html`<a href="/location/${location.getId()}">${location.getName()}</a>`;
+                return html`<a href="/location/${location.getId()}">${location.getId()}</a>`;
             }
             case 5: {
                 const warehouse = data.getWarehouse();
