@@ -34,5 +34,10 @@ func main() {
 	http.HandleFunc("/shopify/order_created", OrderCreatedCallback)
 	http.HandleFunc("/shopify/callback", AuthCallbackHandler)
 	http.HandleFunc("/shopify", AuthHandler)
-	http.ListenAndServe(":8000", nil)
+	log.Println("Server listening")
+	err = http.ListenAndServe(":8000", nil)
+	if err != nil {
+		log.Panic(err)
+	}
+
 }

@@ -52,11 +52,11 @@ func AuthCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println(token)
 	client := goshopify.NewClient(*app, shopName, token)
 
-	err = CreateHook(client, "orders/create", "https://c4269145.ngrok.io/shopify/order_created")
+	err = CreateHook(client, "orders/create", "https://2a486abf.ngrok.io/shopify/order_created")
 	if err != nil {
 		log.Panic(err)
 	}
-	err = CreateHook(client, "products/update", "https://c4269145.ngrok.io/shopify/product_updated")
+	err = CreateHook(client, "products/update", "https://2a486abf.ngrok.io/shopify/product_updated")
 	if err != nil {
 		log.Panic(err)
 	}

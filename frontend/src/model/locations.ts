@@ -1,7 +1,7 @@
 import api from '../proto/inventory_grpc_web_pb';
 import { ResourcesManager } from './resources-manager';
 
-export class LocationsManager extends ResourcesManager<number, api.Location> {
+export class LocationsManager extends ResourcesManager<string, api.Location> {
     client : api.InventoryPromiseClient;
     warehouseId: number|null = null;
     constructor(client : api.InventoryPromiseClient) {

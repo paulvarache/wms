@@ -24,9 +24,9 @@ func GetApp() *goshopify.App {
 		// 	log.Panic(err)
 		// }
 		app = &goshopify.App{
-			ApiKey:      "",
-			ApiSecret:   "",
-			RedirectUrl: "https://c4269145.ngrok.io/shopify/callback",
+			ApiKey:      "62dc5bf2568fe7eb723016d07765366c",
+			ApiSecret:   "5df2a5abd056b968c008d3d9bf5595b3",
+			RedirectUrl: "https://2a486abf.ngrok.io/shopify/callback",
 			Scope:       "read_products,read_orders",
 		}
 	}

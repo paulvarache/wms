@@ -54,6 +54,8 @@ export class Mediator {
 
         this.routeResolver.addRoute(/^\/auth$/, () => import('./pages/auth').then(m => new m.AuthPage(this)));
         this.routeResolver.addRoute(/^\/import$/, () => import('./pages/import').then(m => new m.ImportPage(this)));
+        this.routeResolver.addRoute(/^\/operations$/, () => import('./pages/operations').then(m => new m.OperationsPage(this)));
+        this.routeResolver.addRoute(/^\/operations\/(\d+)$/, (args) => import('./pages/operation').then(m => new m.OperationPage(this, parseInt(args[0], 10))));
         this.routeResolver.addRoute(/^\/warehouses$/, () => import('./pages/warehouses').then(m => new m.WarehousePages(this)));
         this.routeResolver.addRoute(/^\/create-warehouse$/, () => import('./pages/create-warehouse').then(m => new m.CreateWarehousePage(this)));
         this.routeResolver.addRoute(/^\/warehouse\/(\d+)$/, (args) => import('./pages/warehouse').then(m => new m.WarehousePage(this, parseInt(args[0], 10))));

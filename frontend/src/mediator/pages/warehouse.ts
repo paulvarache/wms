@@ -16,7 +16,7 @@ export class LocationsTableProvider extends TableProvider<api.Location> {
     getCellText(index : number, loc : api.Location) {
         switch (index) {
             case 0: {
-                return html`<a href="/location/${loc.getId()}" >${loc.getName()}</a>`;
+                return html`<a href="/location/${loc.getId()}" >${loc.getId()}</a>`;
             }
         }
         return html``;

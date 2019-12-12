@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	goshopify "github.com/bold-commerce/go-shopify"
-	"google.golang.org/grpc"
 	"wms/inventory/api"
+
+	goshopify "github.com/bold-commerce/go-shopify"
 )
 
 // ProductUpdatedCallback will handle the product_updated webhook
@@ -20,13 +20,7 @@ func ProductUpdatedCallback(w http.ResponseWriter, r *http.Request) {
 	}
 	product := new(goshopify.Product)
 	json.NewDecoder(r.Body).Decode(product)
-	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(":7777", grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("did not connect: %s", err)
-	}
-	defer conn.Close()
-	c := api.NewInventoryClient(conn)
+	c := GetClient()
 	for _, v := range product.Variants {
 		res, err := c.UpdateSku(context.Background(), &api.CreateSkuMessage{AccountID: 1, Sku: v.Sku, Name: product.Title, Description: product.Title, Barcode: v.Barcode})
 		if err != nil {

@@ -94,6 +94,43 @@ message ListLocationsMessage {
     int64 warehouseId = 1;
 }
 
+// Operations
+
+enum OperationState {
+    UNKNOWN_OPERATION_STATE = 0;
+    AWAITING = 1;
+    READY = 2;
+    PROCESSED = 3;
+}
+
+message Operation {
+    int64 accountID = 1;
+    int64 ID = 2;
+    string reference = 3;
+    OperationState state = 4;
+    int64 itemCount = 5;
+}
+
+message OperationItem {
+    int64 ID = 1;
+    int64 operationID = 2;
+    string sku = 3;
+    int64 quantityRequested = 4;
+    int64 quantityProcessed = 5;
+    string sourceLocation = 6;
+    string targetLocation = 7;
+}
+
+message CreateOperationMessage {
+    int64 accountID = 1;
+    string reference = 2;
+    repeated OperationItem items = 3;
+}
+
+message SingleOperation {
+    Operation item = 1;
+}
+
 service Inventory {
     rpc CreateAccount(CreateAccountMessage) returns (SingleAccount) {}
     rpc CreateSku(CreateSkuMessage) returns (SingleSku) {}
@@ -107,6 +144,31 @@ service Inventory {
     rpc ListLocations(ListLocationsMessage) returns (LocationList) {}
 
     rpc SearchInventory(SearchMessage) returns (SearchResult) {}
+
+    rpc CreateOperation(CreateOperationMessage) returns (SingleOperation) {}
+    rpc ListOperations(ListOperationsMessage) returns (OperationList) {}
+    rpc ListOperationItems(SingleOperationMessage) returns (OperationItemList) {}
+    rpc ListLocationsForOperation(SingleOperationMessage) returns (SingleOperation) {}
+}
+
+message OperationItemList {
+    repeated OperationItem items = 1;
+}
+
+message SingleOperationMessage {
+    int64 operationID = 1;
+}
+
+message ListOperationsMessage {
+    int64 accountID = 1;
+}
+
+message OperationList {
+    repeated Operation items = 1;
+}
+
+message SingleOperationItem {
+    OperationItem item = 1;
 }
 
 message SearchMessage {

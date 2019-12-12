@@ -1,4 +1,4 @@
-import api from './proto/import_grpc_web_pb';
+import api from './proto/inventory_grpc_web_pb';
 import { WMSApp } from "./ui/app";
 import { Mediator } from "./mediator/mediator";
 
@@ -13,7 +13,7 @@ window.mediator = mediator;
 
 document.body.appendChild(UI);
 
-const client = new api.ImportPromiseClient('http://localhost:8082', null, null);
+const client = new api.InventoryPromiseClient('http://localhost:8080', null, null);
 
 window.client = client;
 window.api = api;

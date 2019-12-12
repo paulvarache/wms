@@ -51,3 +51,14 @@ func GetDB() *sql.DB {
 	}
 	return db
 }
+
+// NewNullString will returna sql ready string. It automatically handles null values for strings
+func NewNullString(s string) sql.NullString {
+	if len(s) == 0 {
+		return sql.NullString{}
+	}
+	return sql.NullString{
+		String: s,
+		Valid:  true,
+	}
+}

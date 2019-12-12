@@ -44,6 +44,7 @@ export class WMSNav extends LitElement {
             <nav>
                 <a href="/">Inventory</a>
                 <a href="/warehouses">Warehouses</a>
+                <a href="/operations">Operations</a>
             </nav>
         `;
     }
